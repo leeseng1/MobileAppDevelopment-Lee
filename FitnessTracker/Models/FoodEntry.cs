@@ -24,7 +24,9 @@
         Breakfast,
         Lunch,
         Dinner,
-        Snack
+        Snack,
+
+        Test
     }
 
 }
