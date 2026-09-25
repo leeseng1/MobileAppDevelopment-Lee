@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FitnessTracker.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FitnessTracker"
+    xmlns:views="clr-namespace:FitnessTracker.Views"
+    Title="FitnessTracker">
+
+    <!-- TabBar creates the bottom navigation bar -->
+    <TabBar>
+
+        <!-- Tab 1: Workout Log -->
+        <Tab Title="Workouts" Icon="dotnet_bot.png">
+            <ShellContent
+                Title="Workouts"
+                ContentTemplate="{DataTemplate views:WorkoutLogPage}"
+                Route="WorkoutLogPage" />
+        </Tab>
+
+        <!-- Tab 2: Dietary Tracker (reusing workoutpage as placeholder for now) -->
+        <Tab Title="Diet" Icon="dotnet_bot.png">
+            <ShellContent
+                Title="Diet Tracker"
+                ContentTemplate="{DataTemplate views:WorkoutLogPage}"
+                Route="DietPage" />
+        </Tab>
+
+        <!-- Tab 3: Goals (reusing workoutpage as placeholder for now) -->
+        <Tab Title="Goals" Icon="dotnet_bot.png">
+            <ShellContent
+                Title="Fitness Goals"
+                ContentTemplate="{DataTemplate views:WorkoutLogPage}"
+                Route="GoalsPage" />
+        </Tab>
+
+    </TabBar>
+
+</Shell>

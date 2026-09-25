@@ -1,0 +1,40 @@
+<!-- WorkoutLogPage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FitnessTracker.Models"
+             x:Class="FitnessTracker.Views.WorkoutLogPage"
+             Title="Workout Log">
+
+    <!-- Use a Grid with RowDefinitions instead of VerticalStackLayout -->
+    <Grid RowDefinitions="Auto, *" Padding="20" RowSpacing="15">
+
+        <!-- Row 0: The Button -->
+        <Button Grid.Row="0"
+                Text="Load My Workouts" 
+                Command="{Binding LoadWorkoutsCommand}" 
+                HorizontalOptions="Center" />
+
+        <!-- Row 1: The List (takes up all remaining space) -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding WorkoutEntries}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:WorkoutEntry">
+                    <Border Margin="0,5" Padding="15">
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="{Binding ActivityType}" FontSize="18" FontAttributes="Bold" />
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="Minutes: " TextColor="Gray" />
+                                <Label Text="{Binding Duration}" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="10">
+                                <Label Text="Calories Burned: " TextColor="Gray" />
+                                <Label Text="{Binding CaloriesBurned}" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
