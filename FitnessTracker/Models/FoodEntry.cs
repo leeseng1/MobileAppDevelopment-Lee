@@ -25,6 +25,8 @@
         Lunch,
         Dinner,
         Snack,
+
+        sdfsafasdfasd
     }
 
 }
