@@ -14,6 +14,9 @@ namespace FitnessTracker.Services.Interfaces
         Task SaveFoodEntryAsync(FoodEntry foodEntry);
 
         Task<IEnumerable<WorkoutGoalEntry>> GetWorkoutGoalsAsync();
+        Task SaveWorkoutGoalAsync(WorkoutGoalEntry goal);
+
         Task<DietGoalEntry> GetDietGoalAsync();
+        Task SaveDietGoalAsync(DietGoalEntry goal);
     }
 }

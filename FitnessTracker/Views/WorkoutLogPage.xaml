@@ -1,40 +1,84 @@
-<!-- WorkoutLogPage.xaml -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:FitnessTracker.Models"
+             xmlns:viewmodels="clr-namespace:FitnessTracker.ViewModels"
              x:Class="FitnessTracker.Views.WorkoutLogPage"
+             x:DataType="viewmodels:WorkoutLogViewModel"
              Title="Workout Log">
 
-    <!-- Use a Grid with RowDefinitions instead of VerticalStackLayout -->
-    <Grid RowDefinitions="Auto, *" Padding="20" RowSpacing="15">
+    <Grid Padding="16"
+          RowDefinitions="2*,3*"
+          RowSpacing="12">
 
-        <!-- Row 0: The Button -->
-        <Button Grid.Row="0"
-                Text="Load My Workouts" 
-                Command="{Binding LoadWorkoutsCommand}" 
-                HorizontalOptions="Center" />
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="Record a workout"
+                       FontSize="20"
+                       FontAttributes="Bold" />
 
-        <!-- Row 1: The List (takes up all remaining space) -->
-        <CollectionView Grid.Row="1" ItemsSource="{Binding WorkoutEntries}">
+                <Entry Placeholder="Activity (e.g., running)"
+                       Text="{Binding ActivityTypeInput}" />
+
+                <Entry Placeholder="Duration in minutes"
+                       Keyboard="Numeric"
+                       Text="{Binding DurationInput}" />
+
+                <Picker Title="Intensity"
+                        ItemsSource="{Binding IntensityLevels}"
+                        SelectedItem="{Binding SelectedIntensity}" />
+
+                <Entry Placeholder="Calories burned"
+                       Keyboard="Numeric"
+                       Text="{Binding CaloriesInput}" />
+
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="Repeat workout"
+                           VerticalOptions="Center" />
+                    <Switch IsToggled="{Binding IsRecurring}"
+                            VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <Picker Title="Repeat frequency"
+                        ItemsSource="{Binding Frequencies}"
+                        SelectedItem="{Binding SelectedFrequency}" />
+
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="Red" />
+
+                <Button Text="Save Workout"
+                        Command="{Binding SaveWorkoutCommand}" />
+
+                <Button Text="Load My Workouts"
+                        Command="{Binding LoadWorkoutsCommand}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding WorkoutEntries}">
+            <CollectionView.EmptyView>
+                <Label Text="No workouts loaded yet."
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </CollectionView.EmptyView>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:WorkoutEntry">
-                    <Border Margin="0,5" Padding="15">
-                        <VerticalStackLayout Spacing="5">
-                            <Label Text="{Binding ActivityType}" FontSize="18" FontAttributes="Bold" />
-                            <HorizontalStackLayout Spacing="10">
-                                <Label Text="Minutes: " TextColor="Gray" />
-                                <Label Text="{Binding Duration}" />
-                            </HorizontalStackLayout>
-                            <HorizontalStackLayout Spacing="10">
-                                <Label Text="Calories Burned: " TextColor="Gray" />
-                                <Label Text="{Binding CaloriesBurned}" />
-                            </HorizontalStackLayout>
+                    <Border Margin="0,5"
+                            Padding="14"
+                            Stroke="#D0D0D0">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding ActivityType}"
+                                   FontSize="18"
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding Duration, StringFormat='Duration: {0} minutes'}" />
+                            <Label Text="{Binding IntensityLevel, StringFormat='Intensity: {0}'}" />
+                            <Label Text="{Binding CaloriesBurned, StringFormat='Calories: {0}'}" />
+                            <Label Text="{Binding IsRecurring, StringFormat='Repeats: {0}'}" />
+                            <Label Text="{Binding Frequency, StringFormat='Frequency: {0}'}" />
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
     </Grid>
-
 </ContentPage>

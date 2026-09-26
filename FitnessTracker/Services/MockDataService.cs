@@ -82,5 +82,17 @@ namespace FitnessTracker.Services
             await Task.Delay(300);
             return dietGoal;
         }
+
+        public async Task SaveWorkoutGoalAsync(WorkoutGoalEntry goal)
+        {
+            await Task.Delay(300);
+            workoutGoals.Add(goal);
+        }
+
+        public async Task SaveDietGoalAsync(DietGoalEntry goal)
+        {
+            await Task.Delay(300);
+            dietGoal = goal;
+        }
     }
 }
