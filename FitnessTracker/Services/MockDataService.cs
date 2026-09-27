@@ -20,8 +20,8 @@ namespace FitnessTracker.Services
         {
             workouts = new List<WorkoutEntry>
             {
-                new WorkoutEntry { Id = 1, Date = DateTime.Now.AddDays(-1), ActivityType = "Running", Duration = 30, CaloriesBurned = 300 },
-                new WorkoutEntry {Id = 2, Date = DateTime.Now.AddDays(-2), ActivityType = "Chest Exercise", Duration = 25, CaloriesBurned = 200, Reps = 10, Weight = 100 }
+                new WorkoutEntry { Id = 1, CurrentDate = DateTime.Now.AddDays(-1), ActivityType = "Running", Duration = 30, CaloriesBurned = 300 },
+                new WorkoutEntry {Id = 2, CurrentDate = DateTime.Now.AddDays(-2), ActivityType = "Chest Exercise", Duration = 25, CaloriesBurned = 200, Reps = 10, Weight = 100 }
             };
 
             foodEntries = new List<FoodEntry>

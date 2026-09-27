@@ -16,6 +16,10 @@
                        FontSize="20"
                        FontAttributes="Bold" />
 
+                <Label Text="{Binding CurrentDate}" 
+                       FontSize="15"
+                       />
+
                 <Entry Placeholder="Activity (e.g., running)"
                        Text="{Binding ActivityTypeInput}" />
 
@@ -40,7 +44,23 @@
 
                 <Picker Title="Repeat frequency"
                         ItemsSource="{Binding Frequencies}"
-                        SelectedItem="{Binding SelectedFrequency}" />
+                        SelectedItem="{Binding SelectedFrequency}"
+                        IsVisible="{Binding IsRecurring}"
+                        IsEnabled="{Binding IsRecurring}" />
+                
+                <!-- Reminder Section -->
+                <HorizontalStackLayout Spacing="12">
+                    <Label Text="Set a reminder"
+                            VerticalOptions="Center" />
+                    <Switch IsToggled="{Binding HasReminder}"
+                            VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <DatePicker Date="{Binding ReminderDate}"
+                            IsEnabled="{Binding HasReminder}" />
+
+                <TimePicker Time="{Binding ReminderTime}"
+                            IsEnabled="{Binding HasReminder}" />
 
                 <Label Text="{Binding ErrorMessage}"
                        TextColor="Red" />
@@ -70,11 +90,14 @@
                             <Label Text="{Binding ActivityType}"
                                    FontSize="18"
                                    FontAttributes="Bold" />
+                            <Label Text="{Binding CurrentDate}"
+                                   FontSize="15" />
                             <Label Text="{Binding Duration, StringFormat='Duration: {0} minutes'}" />
                             <Label Text="{Binding IntensityLevel, StringFormat='Intensity: {0}'}" />
                             <Label Text="{Binding CaloriesBurned, StringFormat='Calories: {0}'}" />
                             <Label Text="{Binding IsRecurring, StringFormat='Repeats: {0}'}" />
-                            <Label Text="{Binding Frequency, StringFormat='Frequency: {0}'}" />
+                            <Label Text="{Binding Frequency, StringFormat='Frequency: {0}'}"
+                                   IsVisible="{Binding IsRecurring}"/>
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>

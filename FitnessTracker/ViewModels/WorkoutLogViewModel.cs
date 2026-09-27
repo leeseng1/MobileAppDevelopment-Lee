@@ -13,23 +13,62 @@ namespace FitnessTracker.ViewModels
     {
         private readonly IDataService dataService;
 
-        private string errorMessage = string.Empty;
+        public DateTime CurrentDate { get; } = DateTime.Now;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public ObservableCollection<WorkoutEntry> WorkoutEntries { get; set; } = new();
+
+        public ObservableCollection<WorkoutGoalEntry> WorkoutGoals { get; } = new();
 
         public IReadOnlyList<IntensityLevel> IntensityLevels { get;  } = Enum.GetValues<IntensityLevel>();  
 
         public IReadOnlyList<Frequency> Frequencies { get; } = Enum.GetValues<Frequency>();
 
         public string ActivityTypeInput { get; set; } = string.Empty;
+
         public string DurationInput { get; set; } = string.Empty;
+
         public string CaloriesInput { get; set; } = string.Empty;
+
         public IntensityLevel SelectedIntensity { get; set; } = IntensityLevel.Medium;
-        public bool IsRecurring { get; set; }
+
+        private bool isRecurring;
+        public bool IsRecurring { 
+            get => isRecurring;
+            set
+            {
+                if (isRecurring == value)
+                {
+                    return;
+                }
+                isRecurring = value;
+                OnPropertyChanged(nameof(IsRecurring));
+            }
+        }
+
         public Frequency SelectedFrequency { get; set; } = Frequency.Weekly;
 
+        private bool hasReminder;
+        public bool HasReminder
+        {
+            get => hasReminder;
+            set
+            {
+                if (hasReminder == value)
+                {
+                    return;
+                }
+                hasReminder = value;
+                OnPropertyChanged(nameof(HasReminder));
+            }
+        }
+
+        public DateTime ReminderDate { get; set; } = DateTime.Today.AddDays(1);
+
+        public TimeSpan ReminderTime { get; set; } = new(9, 0, 0);
+
+        private string errorMessage = string.Empty;
         public string ErrorMessage
         {
             get => errorMessage;
@@ -59,9 +98,12 @@ namespace FitnessTracker.ViewModels
         }
 
         private async Task LoadWorkoutsAsync()
+
         {
             var workouts = await dataService.GetWorkoutEntriesAsync();
+
             WorkoutEntries.Clear();
+
             foreach (var workout in workouts)
             {
                 WorkoutEntries.Add(workout);
@@ -90,14 +132,25 @@ namespace FitnessTracker.ViewModels
                 return;
             }
 
+            var reminderDateTime = ReminderDate.Date + ReminderTime;
+
+            if(HasReminder && reminderDateTime <= DateTime.Now)
+            {
+                ErrorMessage = "Reminder date and time must be in the future";
+                return;
+            }
+
             var workout = new WorkoutEntry
             {
                 ActivityType = ActivityTypeInput.Trim(),
+                CurrentDate = CurrentDate,
                 Duration = duration,
                 IntensityLevel = SelectedIntensity,
                 CaloriesBurned = calories,
                 IsRecurring = IsRecurring,
-                Frequency = SelectedFrequency
+                Frequency = SelectedFrequency,
+                HasReminder = HasReminder,
+                ReminderDateTime = reminderDateTime
             };
 
             await dataService.SaveWorkoutAsync(workout);
