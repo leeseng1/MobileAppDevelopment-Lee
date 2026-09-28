@@ -30,15 +30,23 @@ namespace FitnessTracker.ViewModels
         public string FatsTargetInput { get; set; } = string.Empty;
         public string MealsTargetInput { get; set; } = string.Empty;
 
+        // Property to display the current diet goal summary
+        public string DietGoalSummary =>
+            $"Calories: {dietGoal.TargetCalories:0} cal\n" +
+            $"Protein: {dietGoal.TargetProtein:0.#} g\n" +
+            $"Carbs: {dietGoal.TargetCarbs:0.#} g\n" +
+            $"Fats: {dietGoal.TargetFats:0.#} g\n" +
+            $"Meals per day: {dietGoal.TargetMealsPerDay}";
+
         // Properties for the workout goal input fields
         public string WorkoutGoalTitleInput { get; set; } = string.Empty;
         public string WorkoutTargetInput { get; set; } = string.Empty;
-        public string WorkoutCurrentInput { get; set; } = "0";
+        public string WorkoutCurrentInput { get; set; } = string.Empty;
         public GoalType SelectedGoalType { get; set; } = GoalType.Endurance;
         public DateTime WorkoutStartDate { get; set; } = DateTime.Today;
         public DateTime WorkoutEndDate { get; set; } = DateTime.Today.AddMonths(1);
 
-
+        // Properties for error and status messages
         public string ErrorMessage
         {
             get => errorMessage;
@@ -67,6 +75,7 @@ namespace FitnessTracker.ViewModels
             }
         }
 
+        // Commands for loading and saving goals
         public Command LoadGoalsCommand { get; }
         public Command SaveDietGoalCommand { get; }
         public Command SaveWorkoutGoalCommand { get; }
@@ -80,15 +89,11 @@ namespace FitnessTracker.ViewModels
             SaveWorkoutGoalCommand = new Command(async () => await SaveWorkoutGoalAsync());
         }
 
+        // Method to load diet and workout goals from the data service
         private async Task LoadGoalsAsync()
         {
             dietGoal = await dataService.GetDietGoalAsync();
-
-            CaloriesTargetInput = dietGoal.TargetCalories.ToString();
-            ProteinTargetInput = dietGoal.TargetProtein.ToString();
-            CarbsTargetInput = dietGoal.TargetCarbs.ToString();
-            FatsTargetInput = dietGoal.TargetFats.ToString();
-            MealsTargetInput = dietGoal.TargetMealsPerDay.ToString();
+            OnPropertyChanged(nameof(DietGoalSummary));
 
             OnPropertyChanged(nameof(CaloriesTargetInput));
             OnPropertyChanged(nameof(ProteinTargetInput));
@@ -103,8 +108,6 @@ namespace FitnessTracker.ViewModels
             {
                 WorkoutGoals.Add(goal);
             }
-
-            statusMessage = "Goals loaded successfully";
         }
 
         private async Task SaveDietGoalAsync()
@@ -112,6 +115,7 @@ namespace FitnessTracker.ViewModels
             ErrorMessage = string.Empty;
             StatusMessage = string.Empty;
 
+            // Validate the input fields for diet goals
             if (!double.TryParse(CaloriesTargetInput, out var calories) || calories <= 0 ||
                 !double.TryParse(ProteinTargetInput, out var protein) || protein < 0 ||
                 !double.TryParse(CarbsTargetInput, out var carbs) || carbs < 0 ||
@@ -134,6 +138,22 @@ namespace FitnessTracker.ViewModels
             };
 
             await dataService.SaveDietGoalAsync(dietGoal);
+
+            // Clear the input fields after saving
+            CaloriesTargetInput = string.Empty;
+            ProteinTargetInput = string.Empty;
+            CarbsTargetInput = string.Empty;
+            FatsTargetInput = string.Empty;
+            MealsTargetInput = string.Empty;
+
+            // Notify the UI to update the input fields and diet goal summary
+            OnPropertyChanged(nameof(CaloriesTargetInput));
+            OnPropertyChanged(nameof(ProteinTargetInput));
+            OnPropertyChanged(nameof(CarbsTargetInput));
+            OnPropertyChanged(nameof(FatsTargetInput));
+            OnPropertyChanged(nameof(MealsTargetInput));
+            OnPropertyChanged(nameof(DietGoalSummary));
+
             StatusMessage = "Diet goals saved";
         }
 

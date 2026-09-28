@@ -12,11 +12,26 @@
 
         <ScrollView Grid.Row="0">
             <VerticalStackLayout Spacing="8">
-                <Label Text="Food and nutrition log"
+                <Label Text="{Binding DailyTotals}"
+                       FontAttributes="Bold" />
+
+                <Label Text="{Binding CaloriesGoalText}" />
+                <ProgressBar Progress="{Binding CaloriesProgress}" />
+
+                <Label Text="{Binding ProteinGoalText}" />
+                <ProgressBar Progress="{Binding ProteinProgress}" />
+
+                <Label Text="{Binding CarbsGoalText}" />
+                <ProgressBar Progress="{Binding CarbsProgress}" />
+
+                <Label Text="{Binding FatsGoalText}" />
+                <ProgressBar Progress="{Binding FatsProgress}" />
+
+                <Label Text="Add a log"
                        FontSize="20"
                        FontAttributes="Bold" />
 
-                <Label Text="{Binding CurrentDate}" />
+                <Label Text="{Binding CurrentDate, StringFormat='Date: {0:f}'}" />
 
                 <Picker Title="Meal"
                         ItemsSource="{Binding Mealtypes}"
@@ -47,23 +62,6 @@
                 <Button Text="Add food entry"
                         Command="{Binding SaveFoodEntryCommand}" />
 
-                <Button Text="Load entries"
-                        Command="{Binding LoadFoodEntriesCommand}" />
-
-                <Label Text="{Binding DailyTotals}"
-                       FontAttributes="Bold" />
-
-                <Label Text="{Binding CaloriesGoalText}" />
-                <ProgressBar Progress="{Binding CaloriesProgress}" />
-
-                <Label Text="{Binding ProteinGoalText}" />
-                <ProgressBar Progress="{Binding ProteinProgress}" />
-
-                <Label Text="{Binding CarbsGoalText}" />
-                <ProgressBar Progress="{Binding CarbsProgress}" />
-
-                <Label Text="{Binding FatsGoalText}" />
-                <ProgressBar Progress="{Binding FatsProgress}" />
             </VerticalStackLayout>
         </ScrollView>
 

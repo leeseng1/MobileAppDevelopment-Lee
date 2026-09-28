@@ -10,13 +10,19 @@
     <ScrollView>
         <VerticalStackLayout Padding="16"
                              Spacing="10">
-
-            <Button Text="Load saved goals"
-                    Command="{Binding LoadGoalsCommand}" />
-
+            
             <Label Text="Diet goals"
                    FontSize="20"
                    FontAttributes="Bold" />
+
+            <Border Padding="12"
+                Stroke="#D0D0D0">
+                <VerticalStackLayout Spacing="6">
+                    <Label Text="Current diet goals"
+                        FontAttributes="Bold" />
+                    <Label Text="{Binding DietGoalSummary}" />
+                </VerticalStackLayout>
+            </Border>
 
             <Entry Placeholder="Daily calorie target"
                    Keyboard="Numeric"
@@ -45,6 +51,8 @@
                    TextColor="Red" />
 
             <Label Text="{Binding StatusMessage}"
+                   FontAttributes="Bold"
+                   FontSize="17"
                    TextColor="Green" />
 
             <BoxView HeightRequest="1"

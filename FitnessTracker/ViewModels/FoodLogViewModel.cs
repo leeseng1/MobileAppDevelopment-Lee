@@ -100,7 +100,6 @@ namespace FitnessTracker.ViewModels
             UpdateDailyTotals();
         }
 
-        //Load food entries for the selected date
         private async Task LoadFoodEntriesAsync()
         {
             dietGoal = await dataService.GetDietGoalAsync();
@@ -176,7 +175,7 @@ namespace FitnessTracker.ViewModels
         private void UpdateDailyTotals()
         {
             DailyTotals =
-                $"Daily totals — Calories: {FoodEntries.Sum(entry => entry.Calories)}, " +
+                $"Daily Progress — Calories: {FoodEntries.Sum(entry => entry.Calories)}, " +
                 $"Protein: {FoodEntries.Sum(entry => entry.Protein):0.#} g, " +
                 $"Carbs: {FoodEntries.Sum(entry => entry.Carbs):0.#} g, " +
                 $"Fats: {FoodEntries.Sum(entry => entry.Fats):0.#} g";

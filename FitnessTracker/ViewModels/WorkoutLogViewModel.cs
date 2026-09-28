@@ -98,15 +98,20 @@ namespace FitnessTracker.ViewModels
         }
 
         private async Task LoadWorkoutsAsync()
-
         {
             var workouts = await dataService.GetWorkoutEntriesAsync();
+            var goals = await dataService.GetWorkoutGoalsAsync();
 
             WorkoutEntries.Clear();
-
             foreach (var workout in workouts)
             {
                 WorkoutEntries.Add(workout);
+            }
+
+            WorkoutGoals.Clear();
+            foreach (var goal in goals)
+            {
+                WorkoutGoals.Add(goal);
             }
         }
 
