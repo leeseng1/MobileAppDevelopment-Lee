@@ -18,7 +18,7 @@ namespace FitnessTracker.Models
         public double TargetValue { get; set; }
         public double CurrentValue { get; set; }
 
-        public bool IsAchieved => CurrentValue >= TargetValue;
+        public bool IsAchieved => Type == GoalType.WeightLoss? CurrentValue <= TargetValue : CurrentValue >= TargetValue;
 
     }
 

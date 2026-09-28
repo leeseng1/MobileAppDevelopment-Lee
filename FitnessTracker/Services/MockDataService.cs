@@ -20,14 +20,14 @@ namespace FitnessTracker.Services
         {
             workouts = new List<WorkoutEntry>
             {
-                new WorkoutEntry { Id = 1, Date = DateTime.Now.AddDays(-1), ActivityType = "Running", Duration = 30, CaloriesBurned = 300 },
-                new WorkoutEntry {Id = 2, Date = DateTime.Now.AddDays(-2), ActivityType = "Chest Exercise", Duration = 25, CaloriesBurned = 200, Reps = 10, Weight = 100 }
+                new WorkoutEntry { Id = 1, CurrentDate = DateTime.Now, ActivityType = "Running", Duration = 30, CaloriesBurned = 300 },
+                new WorkoutEntry {Id = 2, CurrentDate = DateTime.Now, ActivityType = "Chest Exercise", Duration = 25, CaloriesBurned = 200, Reps = 10, Weight = 100 }
             };
 
             foodEntries = new List<FoodEntry>
             {
-                new FoodEntry { Id = 1, Date = DateTime.Now.AddDays(-1), Name = "Apple", Calories = 95, Protein = 0.5, Carbs = 25, Fats = 0.3 },
-                new FoodEntry { Id = 2, Date = DateTime.Now.AddDays(-2), Name = "Chicken Breast", Calories = 165, Protein = 31, Carbs = 0, Fats = 3.6 }
+                new FoodEntry { Id = 1, Date = DateTime.Now, Name = "Apple", Calories = 95, Protein = 0.5, Carbs = 25, Fats = 0.3 },
+                new FoodEntry { Id = 2, Date = DateTime.Now, Name = "Chicken Breast", Calories = 165, Protein = 31, Carbs = 0, Fats = 3.6 }
             };
 
             workoutGoals = new List<WorkoutGoalEntry>
@@ -38,7 +38,7 @@ namespace FitnessTracker.Services
             dietGoal = new DietGoalEntry
             {
                 Id = 1,
-                StartDate = DateTime.Now.AddDays(-7),
+                StartDate = DateTime.Now,
                 TargetCalories = 2000,
                 TargetProtein = 150,
                 TargetCarbs = 250,

@@ -1,0 +1,97 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:FitnessTracker.Models"
+             xmlns:viewmodels="clr-namespace:FitnessTracker.ViewModels"
+             x:Class="FitnessTracker.Views.FoodLogPage"
+             x:DataType="viewmodels:FoodLogViewModel"
+             Title="Dietary Log">
+
+    <Grid Padding="16"
+          RowDefinitions="2*,3*"
+          RowSpacing="12">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{Binding DailyTotals}"
+                       FontAttributes="Bold" />
+
+                <Label Text="{Binding CaloriesGoalText}" />
+                <ProgressBar Progress="{Binding CaloriesProgress}" />
+
+                <Label Text="{Binding ProteinGoalText}" />
+                <ProgressBar Progress="{Binding ProteinProgress}" />
+
+                <Label Text="{Binding CarbsGoalText}" />
+                <ProgressBar Progress="{Binding CarbsProgress}" />
+
+                <Label Text="{Binding FatsGoalText}" />
+                <ProgressBar Progress="{Binding FatsProgress}" />
+
+                <Label Text="Add a log"
+                       FontSize="20"
+                       FontAttributes="Bold" />
+
+                <Label Text="{Binding CurrentDate, StringFormat='Date: {0:f}'}" />
+
+                <Picker Title="Meal"
+                        ItemsSource="{Binding Mealtypes}"
+                        SelectedItem="{Binding SelectedMeal}" />
+
+                <Entry Placeholder="Food or drink"
+                       Text="{Binding NameInput}" />
+
+                <Entry Placeholder="Calories"
+                       Keyboard="Numeric"
+                       Text="{Binding CaloriesInput}" />
+
+                <Entry Placeholder="Protein (g)"
+                       Keyboard="Numeric"
+                       Text="{Binding ProteinInput}" />
+
+                <Entry Placeholder="Carbs (g)"
+                       Keyboard="Numeric"
+                       Text="{Binding CarbsInput}" />
+
+                <Entry Placeholder="Fats (g)"
+                       Keyboard="Numeric"
+                       Text="{Binding FatsInput}" />
+
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="Red" />
+
+                <Button Text="Add food entry"
+                        Command="{Binding SaveFoodEntryCommand}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding FoodEntries}">
+            <CollectionView.EmptyView>
+                <Label Text="No food entries for this date."
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FoodEntry">
+                    <Border Margin="0,5"
+                            Padding="14"
+                            Stroke="#D0D0D0">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding Name}"
+                                   FontSize="18"
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding Meal, StringFormat='Meal: {0}'}" />
+                            <Label Text="{Binding Date, StringFormat='Logged: {0:t}'}" />
+                            <Label Text="{Binding Calories, StringFormat='Calories: {0}'}" />
+                            <Label Text="{Binding Protein, StringFormat='Protein: {0} g'}" />
+                            <Label Text="{Binding Carbs, StringFormat='Carbs: {0} g'}" />
+                            <Label Text="{Binding Fats, StringFormat='Fats: {0} g'}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

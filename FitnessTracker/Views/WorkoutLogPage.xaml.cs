@@ -5,10 +5,21 @@ namespace FitnessTracker.Views;
 
 public partial class WorkoutLogPage : ContentPage
 {
-	public WorkoutLogPage(WorkoutLogViewModel viewModel)
+	private readonly WorkoutLogViewModel viewModel;
+
+    public WorkoutLogPage(WorkoutLogViewModel viewModel)
 	{
 		InitializeComponent();
 
-		BindingContext = viewModel;
+        this.viewModel = viewModel;
+
+        BindingContext = viewModel;
 	}
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        
+        viewModel.LoadWorkoutsCommand.Execute(null);
+    }
 }

@@ -8,7 +8,7 @@ namespace FitnessTracker.Models
     {
         public int Id { get; set; }
 
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime CurrentDate { get; set; } = DateTime.Now;
 
         public int Duration { get; set; }
 
@@ -27,6 +27,10 @@ namespace FitnessTracker.Models
         public bool IsRecurring { get; set; }
 
         public Frequency Frequency { get; set; }
+
+        public bool HasReminder { get; set; }
+
+        public DateTime ReminderDateTime { get; set; }
 
     }
 

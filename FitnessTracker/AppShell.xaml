@@ -22,7 +22,7 @@
         <Tab Title="Diet" Icon="dotnet_bot.png">
             <ShellContent
                 Title="Diet Tracker"
-                ContentTemplate="{DataTemplate views:WorkoutLogPage}"
+                ContentTemplate="{DataTemplate views:FoodLogPage}"
                 Route="DietPage" />
         </Tab>
 
@@ -30,7 +30,7 @@
         <Tab Title="Goals" Icon="dotnet_bot.png">
             <ShellContent
                 Title="Fitness Goals"
-                ContentTemplate="{DataTemplate views:WorkoutLogPage}"
+                ContentTemplate="{DataTemplate views:GoalsPage}"
                 Route="GoalsPage" />
         </Tab>
 

@@ -25,6 +25,14 @@ namespace FitnessTracker
 
             builder.Services.AddTransient<WorkoutLogPage>();
 
+            builder.Services.AddTransient<FoodLogViewModel>();
+
+            builder.Services.AddTransient<FoodLogPage>();
+
+            builder.Services.AddTransient<GoalsViewModel>();
+
+            builder.Services.AddTransient<GoalsPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
