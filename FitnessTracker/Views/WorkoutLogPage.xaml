@@ -65,8 +65,57 @@
                 <Label Text="{Binding ErrorMessage}"
                        TextColor="Red" />
 
-                <Button Text="Save Workout"
-                        Command="{Binding SaveWorkoutCommand}" />
+                <!-- Swipe Section -->
+                <Grid x:Name="SwipeTrack"
+                              HeightRequest="48">
+
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="24" />
+                        </Border.StrokeShape>
+                    </Border>
+
+                    <!-- Green fill grows beneath the thumb as the user drags. -->
+                    <Border x:Name="ProgressFill"
+                                    Margin="4"
+                                    WidthRequest="0"
+                                    HorizontalOptions="Start"
+                                    BackgroundColor="Green"
+                                    Opacity="0"
+                                    StrokeThickness="0"
+                                    InputTransparent="True">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                    </Border>
+                    
+                    <!--label for the swipe instruction with an arrow-->
+                    <Label Text="Swipe to save &#8594;"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}"
+                                InputTransparent="True" />
+                     
+                    <!--box for the swipe thumb-->
+                    <Grid x:Name="SwipeThumb"
+                                  WidthRequest="40"
+                                  HeightRequest="40"
+                                  Margin="4"
+                                  HorizontalOptions="Start"
+                                  VerticalOptions="Center">
+                        <Border BackgroundColor="White"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+                        </Border>
+
+                        <Grid.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="OnSwipePanUpdated" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Grid>
 
                 <Label Text="Workout goals"
                        FontSize="18"

@@ -88,15 +88,27 @@ namespace FitnessTracker.ViewModels
         public double FatsProgress =>
             GetProgress(FoodEntries.Sum(entry => entry.Fats), dietGoal.TargetFats);
 
+        // Commands
         public Command LoadFoodEntriesCommand { get; }
 
         public Command SaveFoodEntryCommand { get; }
+
+        public Command<FoodEntry> ToggleFoodDetailsCommand { get; }
 
         public FoodLogViewModel(IDataService dataService)
         {
             this.dataService = dataService;
             LoadFoodEntriesCommand = new Command(async () => await LoadFoodEntriesAsync());
             SaveFoodEntryCommand = new Command(async () => await SaveFoodEntryAsync());
+
+            ToggleFoodDetailsCommand = new Command<FoodEntry>(entry =>
+            {
+                if (entry != null)
+                {
+                    entry.IsDetailsExpanded = !entry.IsDetailsExpanded;
+                }
+            });
+
             UpdateDailyTotals();
         }
 
