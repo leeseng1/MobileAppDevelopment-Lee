@@ -20,7 +20,12 @@ namespace FitnessTracker.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<WorkoutGoalEntry>().Ignore(goal => goal.IsAchieved);
+            modelBuilder.Entity<WorkoutGoalEntry>(entity =>
+            {
+                entity.Ignore(goal => goal.IsAchieved);
+                entity.Ignore(goal => goal.Progress);
+                entity.Ignore(goal => goal.ProgressPercent);
+            });
         }
     }
 }

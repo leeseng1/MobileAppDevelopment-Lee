@@ -7,6 +7,7 @@ namespace FitnessTracker
         public App()
         {
             InitializeComponent();
+            Current!.UserAppTheme = AppTheme.Dark;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

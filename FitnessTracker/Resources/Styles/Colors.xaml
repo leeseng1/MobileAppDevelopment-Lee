@@ -5,12 +5,12 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="PrimaryDark">#ac99ea</Color>
-    <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <Color x:Key="Primary">#7CC4FF</Color>
+    <Color x:Key="PrimaryDark">#7CC4FF</Color>
+    <Color x:Key="PrimaryDarkText">#0B1220</Color>
+    <Color x:Key="Secondary">#152238</Color>
+    <Color x:Key="SecondaryDarkText">#D6E9FF</Color>
+    <Color x:Key="Tertiary">#3B82F6</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
@@ -26,6 +26,17 @@
     <Color x:Key="Gray600">#404040</Color>
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
+
+    <!-- Shared app-wide dark theme palette -->
+    <Color x:Key="AppBackground">#0B1220</Color>
+    <Color x:Key="AppSurface">#152238</Color>
+    <Color x:Key="AppText">#D6E9FF</Color>
+    <Color x:Key="AppAccentBlue">#7CC4FF</Color>
+    <Color x:Key="AppBorder">#334155</Color>
+    <Color x:Key="AppError">#FF9B9B</Color>
+    <Color x:Key="GoalProgressBlue">#3B82F6</Color>
+    <Color x:Key="GoalProgressGreen">#22C55E</Color>
+    <Color x:Key="GoalProgressTrack">#334155</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>

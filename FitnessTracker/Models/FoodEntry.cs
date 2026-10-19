@@ -1,7 +1,13 @@
-﻿namespace FitnessTracker.Models
+﻿using System.ComponentModel;
+
+namespace FitnessTracker.Models
 {
-    public class FoodEntry
+    public class FoodEntry : INotifyPropertyChanged
     {
+        private bool isDetailsExpanded;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public int Id { get; set; }
 
         public DateTime Date { get; set; } = DateTime.Now;
@@ -17,6 +23,26 @@
         public double Carbs { get; set; }
 
         public double Fats { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the details section is expanded.
+        /// </summary>
+        /// <remarks>Setting the property raises PropertyChanged. Assigning the current value has no
+        /// effect.</remarks>
+        public bool IsDetailsExpanded
+        {
+            get => isDetailsExpanded;
+            set
+            {
+                if (isDetailsExpanded == value)
+                {
+                    return;
+                }
+                isDetailsExpanded = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDetailsExpanded)));
+            }
+        }
+
     }
 
     public enum MealType

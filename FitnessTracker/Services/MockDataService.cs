@@ -12,8 +12,6 @@ namespace FitnessTracker.Services
 
         private List<FoodEntry> foodEntries;
 
-        private List<WorkoutGoalEntry> workoutGoals;
-
         private DietGoalEntry dietGoal;
 
         public MockDataService()
@@ -28,11 +26,6 @@ namespace FitnessTracker.Services
             {
                 new FoodEntry { Id = 1, Date = DateTime.Now, Name = "Apple", Calories = 95, Protein = 0.5, Carbs = 25, Fats = 0.3 },
                 new FoodEntry { Id = 2, Date = DateTime.Now, Name = "Chicken Breast", Calories = 165, Protein = 31, Carbs = 0, Fats = 3.6 }
-            };
-
-            workoutGoals = new List<WorkoutGoalEntry>
-            {
-                new WorkoutGoalEntry { Id = 1, Title = "Lose Weight", Type = GoalType.WeightLoss, TargetValue = 150, CurrentValue = 160, StartDate = DateTime.Now.AddDays(-30), EndDate = DateTime.Now.AddDays(30) }
             };
 
             dietGoal = new DietGoalEntry
@@ -71,22 +64,10 @@ namespace FitnessTracker.Services
             foodEntries.Add(foodEntry);
         }
 
-        public async Task<IEnumerable<WorkoutGoalEntry>> GetWorkoutGoalsAsync()
-        {
-            await Task.Delay(300);
-            return workoutGoals;
-        }
-
         public async Task<DietGoalEntry> GetDietGoalAsync()
         {
             await Task.Delay(300);
             return dietGoal;
-        }
-
-        public async Task SaveWorkoutGoalAsync(WorkoutGoalEntry goal)
-        {
-            await Task.Delay(300);
-            workoutGoals.Add(goal);
         }
 
         public async Task SaveDietGoalAsync(DietGoalEntry goal)

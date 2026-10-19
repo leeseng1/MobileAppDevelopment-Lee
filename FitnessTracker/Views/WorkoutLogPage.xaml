@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:FitnessTracker.Models"
              xmlns:viewmodels="clr-namespace:FitnessTracker.ViewModels"
+             xmlns:controls="clr-namespace:FitnessTracker.Views.Controls"
              x:Class="FitnessTracker.Views.WorkoutLogPage"
              x:DataType="viewmodels:WorkoutLogViewModel"
              Title="Workout Log">
@@ -63,10 +64,59 @@
                             IsEnabled="{Binding HasReminder}" />
 
                 <Label Text="{Binding ErrorMessage}"
-                       TextColor="Red" />
+                       Style="{StaticResource ErrorLabel}" />
 
-                <Button Text="Save Workout"
-                        Command="{Binding SaveWorkoutCommand}" />
+                <!-- Swipe Section -->
+                <Grid x:Name="SwipeTrack"
+                              HeightRequest="48">
+
+                    <Border BackgroundColor="{StaticResource AppSurface}"
+                            StrokeThickness="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="24" />
+                        </Border.StrokeShape>
+                    </Border>
+
+                    <!-- Green fill grows beneath the thumb as the user drags. -->
+                    <Border x:Name="ProgressFill"
+                                    Margin="4"
+                                    WidthRequest="0"
+                                    HorizontalOptions="Start"
+                                    BackgroundColor="{StaticResource GoalProgressGreen}"
+                                    Opacity="0"
+                                    StrokeThickness="0"
+                                    InputTransparent="True">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                    </Border>
+                    
+                    <!--label for the swipe instruction with an arrow-->
+                    <Label Text="Swipe to save &#8594;"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                TextColor="{StaticResource AppText}"
+                                InputTransparent="True" />
+                     
+                    <!--box for the swipe thumb-->
+                    <Grid x:Name="SwipeThumb"
+                                  WidthRequest="40"
+                                  HeightRequest="40"
+                                  Margin="4"
+                                  HorizontalOptions="Start"
+                                  VerticalOptions="Center">
+                        <Border BackgroundColor="{StaticResource AppText}"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20" />
+                            </Border.StrokeShape>
+                        </Border>
+
+                        <Grid.GestureRecognizers>
+                            <PanGestureRecognizer PanUpdated="OnSwipePanUpdated" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </Grid>
 
                 <Label Text="Workout goals"
                        FontSize="18"
@@ -75,16 +125,52 @@
                 <VerticalStackLayout BindableLayout.ItemsSource="{Binding WorkoutGoals}"
                         Spacing="8">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="models:WorkoutGoalEntry">
-                            <Border Padding="12"
-                                    Stroke="#D0D0D0">
-                                <VerticalStackLayout Spacing="4">
-                                    <Label Text="{Binding Title}"
-                                        FontAttributes="Bold" />
-                                    <Label Text="{Binding Type, StringFormat='Type: {0}'}" />
-                                    <Label Text="{Binding CurrentValue, StringFormat='Current: {0}'}" />
-                                    <Label Text="{Binding TargetValue, StringFormat='Target: {0}'}" />
-                                    <Label Text="{Binding IsAchieved, StringFormat='Achieved: {0}'}" />
+                        <DataTemplate x:DataType="viewmodels:WorkoutGoalCardViewModel">
+                            <Border Padding="12" Stroke="{StaticResource AppBorder}">
+                                <VerticalStackLayout Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding ToggleExpandedCommand}" />
+                                        </Grid.GestureRecognizers>
+
+                                        <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
+                                            <Label Text="{Binding Goal.Title}" FontAttributes="Bold" FontSize="18" />
+                                            <Label Text="{Binding Goal.Type, StringFormat='Type: {0}'}" />
+
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="Current:" />
+                                                <Label Text="{Binding Goal.CurrentValue}" />
+                                                <Label Text="{Binding Goal.Unit}" />
+                                            </HorizontalStackLayout>
+
+                                            <HorizontalStackLayout Spacing="4">
+                                                <Label Text="Target:" />
+                                                <Label Text="{Binding Goal.TargetValue}" />
+                                                <Label Text="{Binding Goal.Unit}" />
+                                            </HorizontalStackLayout>
+
+                                        </VerticalStackLayout>
+
+                                        <controls:GoalProgressRing
+                                            Grid.Column="1"
+                                            Progress="{Binding Goal.Progress}"
+                                            GoalTitle="{Binding Goal.Title}"
+                                            IsComplete="{Binding Goal.IsAchieved}"
+                                            VerticalOptions="Center" />
+                                    </Grid>
+
+                                    <VerticalStackLayout IsVisible="{Binding IsExpanded}"
+                                 Spacing="6">
+                                        <Entry Placeholder="{Binding Goal.Unit, StringFormat='New current value ({0})'}"
+                       Keyboard="Numeric"
+                       Text="{Binding ProgressInput}" />
+
+                                        <Label Text="{Binding ErrorMessage}"
+                       Style="{StaticResource ErrorLabel}" />
+
+                                        <Button Text="Update progress"
+                        Command="{Binding UpdateProgressCommand}" />
+                                    </VerticalStackLayout>
                                 </VerticalStackLayout>
                             </Border>
                         </DataTemplate>
@@ -105,7 +191,7 @@
                 <DataTemplate x:DataType="models:WorkoutEntry">
                     <Border Margin="0,5"
                             Padding="14"
-                            Stroke="#D0D0D0">
+                            Stroke="{StaticResource AppBorder}">
                         <VerticalStackLayout Spacing="4">
                             <Label Text="{Binding ActivityType}"
                                    FontSize="18"
