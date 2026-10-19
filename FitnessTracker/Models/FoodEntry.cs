@@ -1,7 +1,13 @@
-﻿namespace FitnessTracker.Models
+﻿using System.ComponentModel;
+
+namespace FitnessTracker.Models
 {
-    public class FoodEntry
+    public class FoodEntry : INotifyPropertyChanged
     {
+        private bool isDetailsExpanded;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public int Id { get; set; }
 
         public DateTime Date { get; set; } = DateTime.Now;

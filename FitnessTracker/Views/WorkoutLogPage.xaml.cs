@@ -7,6 +7,8 @@ public partial class WorkoutLogPage : ContentPage
 {
 	private readonly WorkoutLogViewModel viewModel;
 
+    private double panStartX;
+
     public WorkoutLogPage(WorkoutLogViewModel viewModel)
 	{
 		InitializeComponent();
