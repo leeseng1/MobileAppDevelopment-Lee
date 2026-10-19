@@ -181,7 +181,6 @@
 
         <CollectionView Grid.Row="1"
                         ItemsSource="{Binding WorkoutEntries}">
-            <Label Text="{Binding Goal.ProgressPercent, StringFormat='Calculated progress: {0:F0}%'}" />
             <CollectionView.EmptyView>
                 <Label Text="No workouts loaded yet."
                        HorizontalOptions="Center"
