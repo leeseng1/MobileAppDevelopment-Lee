@@ -12,6 +12,8 @@ namespace FitnessTracker.ViewModels
     {
         private readonly IDataService dataService;
 
+        private readonly IWorkoutGoalStore workoutGoalStore;
+
         private string errorMessage = string.Empty;
 
         private string statusMessage = string.Empty;
@@ -41,6 +43,7 @@ namespace FitnessTracker.ViewModels
         // Properties for the workout goal input fields
         public string WorkoutGoalTitleInput { get; set; } = string.Empty;
         public string WorkoutTargetInput { get; set; } = string.Empty;
+        public string WorkoutGoalUnitInput { get; set; } = string.Empty;
         public string WorkoutCurrentInput { get; set; } = string.Empty;
         public GoalType SelectedGoalType { get; set; } = GoalType.Endurance;
         public DateTime WorkoutStartDate { get; set; } = DateTime.Today;
@@ -80,9 +83,10 @@ namespace FitnessTracker.ViewModels
         public Command SaveDietGoalCommand { get; }
         public Command SaveWorkoutGoalCommand { get; }
 
-        public GoalsViewModel(IDataService dataService)
+        public GoalsViewModel(IDataService dataService, IWorkoutGoalStore workoutGoalStore)
         {
             this.dataService = dataService;
+            this.workoutGoalStore = workoutGoalStore;
 
             LoadGoalsCommand = new Command(async () => await LoadGoalsAsync());
             SaveDietGoalCommand = new Command(async () => await SaveDietGoalAsync());
@@ -101,7 +105,7 @@ namespace FitnessTracker.ViewModels
             OnPropertyChanged(nameof(FatsTargetInput));
             OnPropertyChanged(nameof(MealsTargetInput));
 
-            var goals = await dataService.GetWorkoutGoalsAsync();
+            var goals = await workoutGoalStore.GetWorkoutGoalsAsync();
             WorkoutGoals.Clear();
 
             foreach (var goal in goals)
@@ -168,10 +172,34 @@ namespace FitnessTracker.ViewModels
                 return;
             }
 
-            if (!double.TryParse(WorkoutTargetInput, out var target) || target <= 0 ||
-                !double.TryParse(WorkoutCurrentInput, out var current) || current < 0)
+            var unit = WorkoutGoalUnitInput.Trim();
+            if (string.IsNullOrWhiteSpace(unit))
+            {
+                ErrorMessage = "Enter a unit for the workout goal.";
+                return;
+            }
+
+            if (!double.TryParse(WorkoutTargetInput, out var target) ||
+                !double.IsFinite(target) || target <= 0 ||
+                !double.TryParse(WorkoutCurrentInput, out var current) ||
+                !double.IsFinite(current) || current < 0)
             {
                 ErrorMessage = "Enter a positive target and a non-negative current value.";
+                return;
+            }
+
+            var directionIsValid = SelectedGoalType switch
+            {
+                GoalType.WeightLoss => target < current,
+                GoalType.MuscleGain or GoalType.Endurance => target > current,
+                _ => false
+            };
+
+            if (!directionIsValid)
+            {
+                ErrorMessage = SelectedGoalType == GoalType.WeightLoss
+                    ? "For weight loss, the target must be lower than the current value."
+                    : "The target must be higher than the current value.";
                 return;
             }
 
@@ -183,22 +211,35 @@ namespace FitnessTracker.ViewModels
 
             var goal = new WorkoutGoalEntry
             {
-                Title = WorkoutGoalTitleInput,
+                Title = WorkoutGoalTitleInput.Trim(),
+                Unit = unit,
                 Type = SelectedGoalType,
                 TargetValue = target,
                 CurrentValue = current,
+                StartingValue = current,
                 StartDate = WorkoutStartDate,
                 EndDate = WorkoutEndDate
             };
 
-            await dataService.SaveWorkoutGoalAsync(goal);
+            try
+            {
+                await workoutGoalStore.AddWorkoutGoalAsync(goal);
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Could not save the workout goal. Please try again.";
+                return;
+            }
+
             WorkoutGoals.Add(goal);
 
             WorkoutGoalTitleInput = string.Empty;
+            WorkoutGoalUnitInput = string.Empty;
             WorkoutTargetInput = string.Empty;
             WorkoutCurrentInput = string.Empty;
 
             OnPropertyChanged(nameof(WorkoutGoalTitleInput));
+            OnPropertyChanged(nameof(WorkoutGoalUnitInput));
             OnPropertyChanged(nameof(WorkoutTargetInput));
             OnPropertyChanged(nameof(WorkoutCurrentInput));
 

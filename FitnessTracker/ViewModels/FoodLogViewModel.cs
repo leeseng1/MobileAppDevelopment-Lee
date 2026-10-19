@@ -64,6 +64,7 @@ namespace FitnessTracker.ViewModels
             }
         }
 
+        // Properties for displaying progress towards diet goals
         public string CaloriesGoalText =>
             $"Calories: {FoodEntries.Sum(entry => entry.Calories)} / {dietGoal.TargetCalories:0} cal";
 
@@ -112,6 +113,7 @@ namespace FitnessTracker.ViewModels
             UpdateDailyTotals();
         }
 
+        // Load food entries for the current date and update daily totals and goal properties
         private async Task LoadFoodEntriesAsync()
         {
             dietGoal = await dataService.GetDietGoalAsync();
@@ -131,6 +133,8 @@ namespace FitnessTracker.ViewModels
             NotifyGoalProperties();
         }
 
+
+        // Save a new food entry after validating the input fields, update daily totals and goal properties, and clear the input fields
         private async Task SaveFoodEntryAsync()
         {
             ErrorMessage = string.Empty;
@@ -184,6 +188,8 @@ namespace FitnessTracker.ViewModels
             OnPropertyChanged(nameof(FatsInput));
         }
 
+
+        // Update the daily totals string based on the current food entries
         private void UpdateDailyTotals()
         {
             DailyTotals =
@@ -193,6 +199,8 @@ namespace FitnessTracker.ViewModels
                 $"Fats: {FoodEntries.Sum(entry => entry.Fats):0.#} g";
         }
 
+
+        // Notify the UI that the goal-related properties have changed, so that progress bars and labels can update
         private void NotifyGoalProperties()
         {
             OnPropertyChanged(nameof(CaloriesGoalText));
@@ -205,9 +213,13 @@ namespace FitnessTracker.ViewModels
             OnPropertyChanged(nameof(FatsProgress));
         }
 
+
+        // Calculate the progress towards a goal as a value between 0 and 1, clamped to that range
         private static double GetProgress(double current, double target) =>
             target <= 0 ? 0 : Math.Clamp((double)current / target, 0, 1);
 
+
+        /// Raise the PropertyChanged event for a given property name, if there are any subscribers
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

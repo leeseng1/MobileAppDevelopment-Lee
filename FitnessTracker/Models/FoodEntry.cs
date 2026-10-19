@@ -24,6 +24,11 @@ namespace FitnessTracker.Models
 
         public double Fats { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the details section is expanded.
+        /// </summary>
+        /// <remarks>Setting the property raises PropertyChanged. Assigning the current value has no
+        /// effect.</remarks>
         public bool IsDetailsExpanded
         {
             get => isDetailsExpanded;

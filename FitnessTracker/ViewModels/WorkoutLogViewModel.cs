@@ -13,13 +13,15 @@ namespace FitnessTracker.ViewModels
     {
         private readonly IDataService dataService;
 
+        private readonly IWorkoutGoalStore workoutGoalStore;
+
         public DateTime CurrentDate { get; } = DateTime.Now;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public ObservableCollection<WorkoutEntry> WorkoutEntries { get; set; } = new();
 
-        public ObservableCollection<WorkoutGoalEntry> WorkoutGoals { get; } = new();
+        public ObservableCollection<WorkoutGoalCardViewModel> WorkoutGoals { get; } = new();
 
         public IReadOnlyList<IntensityLevel> IntensityLevels { get;  } = Enum.GetValues<IntensityLevel>();  
 
@@ -85,22 +87,33 @@ namespace FitnessTracker.ViewModels
             }
         }
 
+        // Commands
         public Command LoadWorkoutsCommand { get; }
 
-        public Command SaveWorkoutCommand { get; }
+        public Command<double> SaveWorkoutCommand { get; }
 
-        public WorkoutLogViewModel(IDataService dataService)
+        public WorkoutLogViewModel(IDataService dataService, IWorkoutGoalStore workoutGoalStore)
         {
             this.dataService = dataService;
+            this.workoutGoalStore = workoutGoalStore;
 
             LoadWorkoutsCommand = new Command(async () => await LoadWorkoutsAsync());
-            SaveWorkoutCommand = new Command(async () => await SaveWorkoutAsync());
+
+            // SaveWorkoutCommand is executed when the user swipes the thumb far enough to trigger a save action.
+            SaveWorkoutCommand = new Command<double>(async progress =>
+            {
+                if (progress >= 0.88)
+                {
+                    await SaveWorkoutAsync();
+                }
+            });
         }
 
+        // Load workouts and goals from the data service
         private async Task LoadWorkoutsAsync()
         {
             var workouts = await dataService.GetWorkoutEntriesAsync();
-            var goals = await dataService.GetWorkoutGoalsAsync();
+            var goals = await workoutGoalStore.GetWorkoutGoalsAsync();
 
             WorkoutEntries.Clear();
             foreach (var workout in workouts)
@@ -111,10 +124,11 @@ namespace FitnessTracker.ViewModels
             WorkoutGoals.Clear();
             foreach (var goal in goals)
             {
-                WorkoutGoals.Add(goal);
+                WorkoutGoals.Add(new WorkoutGoalCardViewModel(goal, SaveGoalProgressAsync));
             }
         }
 
+        // Save a new workout entry after validating the input fields and clear the input fields
         private async Task SaveWorkoutAsync()
         {
             ErrorMessage = string.Empty;
@@ -172,6 +186,50 @@ namespace FitnessTracker.ViewModels
             OnPropertyChanged(nameof(IsRecurring));
         }
 
+        // Save the progress for a specific workout goal after validating the input value
+        private async Task SaveGoalProgressAsync(WorkoutGoalCardViewModel card)
+        {
+            card.ErrorMessage = string.Empty;
+
+            if (!double.TryParse(card.ProgressInput, out var newValue) ||
+                !double.IsFinite(newValue) ||
+                newValue < 0)
+            {
+                card.ErrorMessage = $"Enter a valid non-negative value in {card.Goal.Unit}.";
+                return;
+            }
+
+            // Save a separate candidate first so the displayed goal stays unchanged
+            // if SQLite reports a failure.
+            var updatedGoal = new WorkoutGoalEntry
+            {
+                Id = card.Goal.Id,
+                Title = card.Goal.Title,
+                Type = card.Goal.Type,
+                Unit = card.Goal.Unit,
+                StartingValue = card.Goal.StartingValue,
+                TargetValue = card.Goal.TargetValue,
+                CurrentValue = newValue,
+                StartDate = card.Goal.StartDate,
+                EndDate = card.Goal.EndDate
+            };
+
+            try
+            {
+                await workoutGoalStore.UpdateWorkoutGoalAsync(updatedGoal);
+            }
+            catch (Exception)
+            {
+                card.ErrorMessage = "Could not save progress. Please try again.";
+                return;
+            }
+
+            // Update the displayed goal only after the database save succeeds.
+            card.Goal.CurrentValue = newValue;
+            card.ProgressInput = string.Empty;
+        }
+
+        // Notify property changed for a given property name
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
