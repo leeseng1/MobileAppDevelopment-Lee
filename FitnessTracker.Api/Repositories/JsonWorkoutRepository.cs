@@ -19,6 +19,8 @@ public class JsonWorkoutRepository : IWorkoutRepository
         Converters = { new JsonStringEnumConverter() }
     };
 
+
+      
     private readonly string _filePath;
 
     // Semaphore to ensure thread-safe access to the JSON file
