@@ -480,3 +480,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Data files
+FitnessTracker.Api/Data/*.json
+FitnessTracker.Api/Data/*.tmp
